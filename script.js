@@ -1,5 +1,5 @@
 // script.js
-// Vanilla JS: background canvas (particles, fireworks), surprise effects, year animation, and simple WebAudio ambient music.
+// Vanilla JS: background canvas (particles, fireworks), surprise effects, year animation, and composed WebAudio background music (no external files).
 // No external libraries. Optimized for modern browsers, falls back gracefully.
 
 (() => {
@@ -26,7 +26,6 @@
 
   // Performance: scale particles by screen size
   const smallScreen = Math.min(window.innerWidth, window.innerHeight) < 600;
-  const PARTICLE_COUNT = smallScreen ? 40 : 90;
   const FLOATERS = smallScreen ? 18 : 36;
 
   resize();
@@ -36,13 +35,11 @@
   function drawBackground() {
     gradOffset = (gradOffset + 0.002) % 1;
     const g = ctx.createLinearGradient(0, 0, 0, h);
-    // moving stops for subtle shift
     g.addColorStop(0, '#0b1026');
     g.addColorStop(Math.abs(Math.sin(gradOffset)) * 0.8, '#24103b');
     g.addColorStop(1, '#2b1055');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
-    // slight vignette
     const vignette = ctx.createRadialGradient(w/2, h/2, Math.min(w,h)/4, w/2, h/2, Math.max(w,h));
     vignette.addColorStop(0, 'rgba(0,0,0,0)');
     vignette.addColorStop(1, 'rgba(0,0,0,0.35)');
@@ -53,9 +50,7 @@
   // Stars / floating particles
   const particles = [];
   class Particle {
-    constructor() {
-      this.reset();
-    }
+    constructor() { this.reset(); }
     reset() {
       this.x = Math.random() * w;
       this.y = Math.random() * h;
@@ -109,13 +104,11 @@
       ctx.save();
       ctx.globalAlpha = Math.max(0, t);
       if (this.type === 'confetti') {
-        // draw rotated rectangle
         ctx.translate(this.x, this.y);
         ctx.rotate(this.spin * this.age * 0.06);
         ctx.fillStyle = this.color;
         ctx.fillRect(-this.size/1.6, -this.size/1.6, this.size*1.6, this.size);
       } else if (this.type === 'heart') {
-        // tiny heart path
         ctx.translate(this.x, this.y);
         ctx.scale(0.6, 0.6);
         ctx.fillStyle = this.color;
@@ -185,22 +178,16 @@
     const dt = Math.min(60, now - last) / 16.666; // normalized
     last = now;
 
-    // clear
     ctx.clearRect(0,0,w,h);
     drawBackground();
 
-    // particles
     for (let p of particles) {
       p.step(dt);
       p.draw(ctx);
     }
 
-    // soft periodic fireworks (background, subtle)
-    if (!reduceMotion && Math.random() < 0.006) {
-      spawnFirework();
-    }
+    if (!reduceMotion && Math.random() < 0.006) spawnFirework();
 
-    // effects
     for (let i = effects.length - 1; i >= 0; i--) {
       const s = effects[i];
       s.step(dt);
@@ -208,7 +195,6 @@
       if (s.age > s.life) effects.splice(i,1);
     }
 
-    // cursor trail
     for (let i = cursorTrail.length - 1; i >= 0; i--) {
       const t = cursorTrail[i];
       ctx.beginPath();
@@ -223,8 +209,6 @@
   }
   requestAnimationFrame(loop);
 
-  // Entrance animations are handled by CSS on load (fade-in + slide-up)
-
   // Year animation (previous -> next)
   const prevEl = document.getElementById('prev-year');
   const nextEl = document.getElementById('next-year');
@@ -232,172 +216,155 @@
     const cur = (new Date()).getFullYear();
     prevEl.textContent = cur;
     nextEl.textContent = cur + 1;
-    // subtle animated transition: count digits fade
     prevEl.style.opacity = '1';
     nextEl.style.opacity = '1';
   }
   setYears();
 
-  // Surprise button: confetti + fireworks + hearts, and a gentle camera-like pulse by creating more fireworks around center
+  // Surprise button logic
   const surpriseBtn = document.getElementById('surprise-btn');
   surpriseBtn.addEventListener('click', (e) => {
-    // spawn several bursts
     const rect = canvas.getBoundingClientRect();
     const cx = rect.width/2;
     const cy = rect.height/2.6;
-    for (let i = 0; i < (smallScreen ? 2 : 4); i++) {
-      spawnFirework(cx + (Math.random()-0.5) * 260, cy + (Math.random()-0.5) * 140);
-    }
-    // confetti near center and hearts rising from button
+    for (let i = 0; i < (smallScreen ? 2 : 4); i++) spawnFirework(cx + (Math.random()-0.5) * 260, cy + (Math.random()-0.5) * 140);
     spawnConfetti(e.clientX, e.clientY);
     spawnHearts(e.clientX, e.clientY);
-    // brief "pop" visual: draw a couple of large fading circles
-    for (let i=0;i<3;i++){
-      const s = new Spark(e.clientX, e.clientY, '#fff', 40 + i*6);
-      s.size = 4 + i*2;
-      effects.push(s);
-    }
+    for (let i=0;i<3;i++){ const s = new Spark(e.clientX, e.clientY, '#fff', 40 + i*6); s.size = 4 + i*2; effects.push(s); }
 
-    // trigger ambient chords if audio resumed function provided
     if (typeof window._audioPlayOnAction === 'function') window._audioPlayOnAction();
   });
 
-  // subtle initial soft fireworks on load (but only if not reduced motion)
   if (!reduceMotion) {
     setTimeout(()=>{ spawnFirework(w*0.25, h*0.18); }, 900);
     setTimeout(()=>{ spawnFirework(w*0.75, h*0.14); }, 1700);
   }
 
-  // WebAudio: light ambient music synthesized by code (no external resources)
-  // Created as gentle pad + occasional chime. Starts only after an explicit user gesture (button or toggle).
+  // --- Composed WebAudio background music (no external files) ---
   let audioCtx = null;
   let masterGain = null;
-  let running = false;
+  let musicRunning = false;
+  let musicInterval = null;
+  let padNodes = [];
+  let melodyNodes = [];
 
-  function initAudio() {
+  function initMusic() {
     if (audioCtx) return;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.0001;
+    masterGain.gain.value = 0.0001; // start near-silent
     masterGain.connect(audioCtx.destination);
 
-    // gentle pad
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const padGain = audioCtx.createGain();
-    padGain.gain.value = 0.06;
-    osc1.type = 'sine'; osc2.type = 'sine';
-    osc1.frequency.value = 220; // A3
-    osc2.frequency.value = 440; // A4 (octave doubling for richness)
-    const padFilter = audioCtx.createBiquadFilter();
-    padFilter.type = 'lowpass'; padFilter.frequency.value = 900;
-    osc1.connect(padGain); osc2.connect(padGain);
-    padGain.connect(padFilter); padFilter.connect(masterGain);
-    osc1.start(); osc2.start();
+    // Create a warm pad by layering detuned saws filtered by lowpass
+    const padF = audioCtx.createBiquadFilter();
+    padF.type = 'lowpass'; padF.frequency.value = 800;
 
-    // occasional chime function
-    function chime() {
+    const detuneCents = [0, -10, 10];
+    padNodes = detuneCents.map((dt) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.value = 110; // A2 base
+      osc.detune.value = dt;
+      const g = audioCtx.createGain(); g.gain.value = 0.02; // quiet
+      osc.connect(g); g.connect(padF);
+      osc.start();
+      return {osc,g};
+    });
+
+    padF.connect(masterGain);
+
+    // gentle slow filter movement
+    const padLfo = audioCtx.createOscillator();
+    const padLfoGain = audioCtx.createGain();
+    padLfo.frequency.value = 0.03;
+    padLfoGain.gain.value = 200;
+    padLfo.connect(padLfoGain);
+    padLfoGain.connect(padF.frequency);
+    padLfo.start();
+
+    // Melody: simple plucked sine with envelope
+    // We'll schedule short notes via setInterval for compatibility
+  }
+
+  const melodyPattern = [440, 523.25, 659.25, 523.25, 440, 392, 330, 392]; // A4, C5, E5 ... simple happy line
+  let melodyIndex = 0;
+  function startMelody() {
+    if (!audioCtx) return;
+    stopMelody();
+    melodyIndex = 0;
+    // play a note every 700ms
+    musicInterval = setInterval(() => {
       const now = audioCtx.currentTime;
+      const freq = melodyPattern[melodyIndex % melodyPattern.length];
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.value = 880 + Math.random()*220;
-      gain.gain.setValueAtTime(0.0, now);
-      gain.gain.linearRampToValueAtTime(0.14, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
-      const flt = audioCtx.createBiquadFilter();
-      flt.type = 'highshelf'; flt.frequency.value = 1200; flt.gain.value = 8;
-      osc.connect(gain);
-      gain.connect(flt);
-      flt.connect(masterGain);
-      osc.start();
-      osc.stop(now + 2.8);
-    }
-
-    // gentle LFO for master gain movement
-    const lfo = audioCtx.createOscillator();
-    const lfoGain = audioCtx.createGain();
-    lfo.frequency.value = 0.05;
-    lfoGain.gain.value = 0.02;
-    lfo.connect(lfoGain);
-    lfoGain.connect(masterGain.gain);
-    lfo.start();
-
-    // schedule occasional chimes
-    let chimeInterval = setInterval(() => {
-      if (!running) return;
-      if (Math.random() > 0.6) chime();
-    }, 2500);
-
-    // expose to shutdown if needed
-    window._audioCleanup = () => {
-      clearInterval(chimeInterval);
-      try { osc1.stop(); osc2.stop(); lfo.stop(); } catch(e){}
-      audioCtx.close();
-      audioCtx = null;
-      running = false;
-    };
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.12, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+      const pan = (Math.random() - 0.5) * 0.6;
+      let panner = null;
+      try {
+        panner = audioCtx.createStereoPanner();
+        panner.pan.value = pan;
+        osc.connect(gain); gain.connect(panner); panner.connect(masterGain);
+      } catch (e) {
+        osc.connect(gain); gain.connect(masterGain);
+      }
+      osc.start(now);
+      osc.stop(now + 0.9);
+      melodyNodes.push(osc);
+      melodyIndex++;
+      // keep melodyNodes small
+      if (melodyNodes.length > 30) melodyNodes.shift();
+    }, 700);
   }
+  function stopMelody() { if (musicInterval) { clearInterval(musicInterval); musicInterval = null; } }
 
-  // play or start audio (called on user gesture)
-  function resumeAudio() {
-    if (!audioCtx) initAudio();
-    if (!audioCtx) return;
+  function startMusic() {
+    if (!audioCtx) initMusic();
     if (audioCtx.state === 'suspended') audioCtx.resume();
-    // fade-in
+    // fade in master
     masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
     masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 1.2);
-    running = true;
+    masterGain.gain.linearRampToValueAtTime(0.07, audioCtx.currentTime + 1.0);
+    startMelody();
+    musicRunning = true;
   }
-  function muteAudio() {
+  function stopMusic() {
     if (!audioCtx || !masterGain) return;
+    // fade out
     masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
     masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
     masterGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
-    running = false;
+    stopMelody();
+    musicRunning = false;
   }
 
-  // Expose helper for surprise button to ensure audio plays on user gesture
-  window._audioPlayOnAction = () => {
-    if (!audioCtx) initAudio();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-    resumeAudio();
-  };
+  // Expose helper for user gesture
+  window._audioPlayOnAction = () => { startMusic(); };
 
   // Mute toggle control
   const audioToggle = document.getElementById('audio-toggle');
   let muted = true;
   audioToggle.addEventListener('click', () => {
-    // First interaction: start audio context and fade in if currently muted
-    if (!audioCtx) {
-      initAudio();
-      resumeAudio();
-      muted = false;
-      audioToggle.textContent = '🔊 Unmute';
-      audioToggle.setAttribute('aria-pressed', 'false');
-      audioToggle.classList.remove('ghost');
-      return;
-    }
-
     if (muted) {
-      // unmute
-      resumeAudio();
+      startMusic();
       audioToggle.textContent = '🔊 Unmute';
       audioToggle.setAttribute('aria-pressed', 'false');
-      muted = false;
       audioToggle.classList.remove('ghost');
+      muted = false;
     } else {
-      // mute
-      muteAudio();
+      stopMusic();
       audioToggle.textContent = '🔈 Mute';
       audioToggle.setAttribute('aria-pressed', 'true');
-      muted = true;
       audioToggle.classList.add('ghost');
+      muted = true;
     }
   });
 
-  // Accessibility: allow Enter/Space to trigger button
+  // Surprise button keyboard accessibility
   surpriseBtn.addEventListener('keydown', (ev) => {
     if (ev.key === 'Enter' || ev.key === ' ') {
       ev.preventDefault();
@@ -405,27 +372,16 @@
     }
   });
 
-  // On load, small UI polish: ensure certain elements reveal (CSS handles most)
-  window.addEventListener('load', () => {
-    // fade-in handled with CSS; ensure canvas size correct
-    resize();
-  });
-
-  // Clean up when page hidden to save battery on mobile
+  // Clean up on hide
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      // quiet audio
-      if (running) muteAudio();
-    } else {
-      // resume gentle audio only on user gesture / if previously running
+      if (musicRunning) stopMusic();
     }
   });
 
-  // Offer a small keyboard shortcut: "S" triggers surprise
-  window.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 's') {
-      surpriseBtn.click();
-    }
-  });
+  window.addEventListener('load', () => { resize(); });
+
+  // keyboard shortcut S triggers surprise
+  window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 's') surpriseBtn.click(); });
 
 })();
