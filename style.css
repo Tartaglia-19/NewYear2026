@@ -150,3 +150,10 @@ main, header{ position:relative; z-index:2; }
 
 /* small helper */
 .hidden{ display:none !important; }
+
+/* GitHub run card */
+.gh-run-card{ margin-top:1rem; padding:.7rem .9rem; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); display:inline-block; color:var(--muted); font-size:.95rem; text-align:left; }
+.gh-run-card .status{ font-weight:700; margin-right:.5rem; }
+.gh-run-card .success{ color:#7ee787; }
+.gh-run-card .failure{ color:#ff8b94; }
+.gh-run-card .run-msg{ margin-top:.45rem; color:rgba(255,255,255,0.8); font-size:.92rem; }

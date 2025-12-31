@@ -385,3 +385,47 @@
   window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 's') surpriseBtn.click(); });
 
 })();
+
+// --- GitHub Actions run card ---
+(function(){
+  const owner = 'Tartaglia-19';
+  const repo = 'NewYear2026';
+  const runId = 20624031976;
+  const el = document.getElementById('gh-run-card');
+  if (!el) return;
+
+  function escapeHtml(str){
+    if(!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function fetchRun(){
+    el.textContent = 'Loading build info…';
+    try{
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}`);
+      if(!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+      const status = data.status;
+      const conclusion = data.conclusion || '';
+      const actor = (data.triggering_actor && data.triggering_actor.login) || (data.actor && data.actor.login) || '';
+      const commitMsg = data.head_commit ? data.head_commit.message : (data.head_branch || '');
+      const created = data.created_at ? new Date(data.created_at).toLocaleString() : '';
+      const statusText = status === 'in_progress' ? 'Running' : (status === 'completed' ? (conclusion || 'Completed') : status);
+      const statusClass = conclusion === 'success' ? 'success' : (conclusion === 'failure' ? 'failure' : '');
+
+      el.innerHTML = `
+        <div class="run-line"><span class="status ${statusClass}">${statusText}</span> ${actor ? 'by '+escapeHtml(actor)+' • ' : ''}${escapeHtml(created)}</div>
+        <div class="run-msg">${escapeHtml(commitMsg)}</div>
+        <div style="margin-top:.5rem;"><a href="${data.html_url}" target="_blank" rel="noopener">View run & logs</a> <button id="gh-run-refresh" class="btn ghost" style="margin-left:.6rem">Refresh</button></div>
+      `;
+
+      const refresh = document.getElementById('gh-run-refresh');
+      if(refresh) refresh.addEventListener('click', fetchRun);
+    }catch(err){
+      console.error('Failed to fetch run info', err);
+      el.textContent = 'Build info unavailable';
+    }
+  }
+
+  fetchRun();
+})();
