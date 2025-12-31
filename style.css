@@ -1,0 +1,152 @@
+:root{
+  --bg-dark-1: #0b1026;
+  --bg-dark-2: #2b1055;
+  --accent-1: #f5c16c;
+  --accent-2: #ff5ea8;
+  --muted: rgba(255,255,255,0.85);
+  --glass: rgba(255,255,255,0.04);
+  --max-width: 900px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:var(--muted);
+  background:linear-gradient(180deg,var(--bg-dark-1) 0%, var(--bg-dark-2) 100%);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow:hidden;
+}
+
+/* Canvas sits behind content */
+#bg-canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  display:block;
+}
+
+/* Center content */
+.center{
+  position:relative;
+  z-index:2;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1.25rem;
+}
+
+/* Hero styling */
+.hero{
+  text-align:center;
+  max-width:var(--max-width);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:16px;
+  padding:2.25rem;
+  box-shadow: 0 8px 30px rgba(2,8,23,0.6);
+  backdrop-filter: blur(6px);
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+/* Heading */
+.heading{
+  margin:0;
+  font-family: "Great Vibes", serif;
+  font-weight:400;
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+  line-height:1;
+  color: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.03),
+    0 8px 30px rgba(43,16,85,0.55);
+  letter-spacing:0.02em;
+}
+
+/* Year row */
+.year-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:.6rem;
+  margin-bottom:1rem;
+}
+.year{
+  font-weight:600;
+  font-size:clamp(1rem,2.6vw,1.6rem);
+  color:var(--accent-1);
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  padding:.25rem .6rem;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.year.arrow{ color: rgba(255,255,255,0.6); background:transparent; border:none; padding:0; }
+
+/* Message */
+.message{
+  margin:0 auto;
+  margin-top:1rem;
+  font-size:clamp(.95rem,2.2vw,1.05rem);
+  color: rgba(255,255,255,0.95);
+  max-width:48rem;
+  line-height:1.6;
+}
+
+/* Signature */
+.signature{ margin-top:1rem; color:rgba(255,255,255,0.75); font-size:.95rem; margin-bottom:1rem; }
+.small{ font-size:.95rem }
+
+/* Controls */
+.controls{ display:flex; gap:0.75rem; justify-content:center; margin-top:1rem; flex-wrap:wrap; }
+.btn{
+  appearance:none;
+  border:0;
+  padding:.7rem 1.1rem;
+  border-radius:12px;
+  cursor:pointer;
+  background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  color:#0b1026;
+  font-weight:600;
+  transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;
+  box-shadow: 0 6px 18px rgba(43,16,85,0.28);
+}
+.btn:active{ transform:translateY(2px) scale(.998); }
+.btn.ghost{
+  background:transparent;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:none;
+}
+
+/* small screens */
+@media (max-width:520px){
+  .hero{ padding:1.4rem; border-radius:12px; }
+  .controls{ gap:.5rem }
+}
+
+/* Animations */
+.fade-in{ opacity:0; transform: translateY(6px); animation:fadeIn .9s cubic-bezier(.2,.9,.2,1) .15s forwards; }
+.slide-up{ opacity:0; transform: translateY(12px); animation:slideUp .9s cubic-bezier(.2,.9,.2,1) .35s forwards; }
+
+@keyframes fadeIn{ to{opacity:1; transform:translateY(0)} }
+@keyframes slideUp{ to{opacity:1; transform:translateY(0)} }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .fade-in, .slide-up{ animation:none; opacity:1; transform:none; }
+}
+
+/* No JS fallback */
+.no-js{ position:fixed; bottom:10px; left:10px; background:rgba(0,0,0,0.45); padding:.4rem .6rem; border-radius:6px; color:#fff; font-size:.8rem; z-index:3; }
+
+/* Make sure main content above canvas */
+main, header{ position:relative; z-index:2; }
+
+/* Tiny improvements for focus states */
+.btn:focus{ outline:3px solid rgba(245,193,108,0.18); outline-offset:3px; border-radius:12px; }
+
+/* small helper */
+.hidden{ display:none !important; }
