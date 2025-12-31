@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy New Year 2026 💖 A Special Message For You</title>
+  <meta property="og:title" content="🎆 Happy New Year 2026 - A Special Message" />
+  <meta property="og:description" content="A heartfelt New Year wish made with love just for you. Click to see the magic! ✨" />
+  <meta property="og:image" content="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/545285f5-b60a-4a88-a550-97df352bee2f.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a0a3e 25%, #2d0a5e 50%, #1a0a3e 75%, #0a0e27 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      color: #fff;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Background elements */
+    .bg-stars {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+      animation: twinkle 3s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .floating-heart {
+      position: fixed;
+      font-size: 2rem;
+      opacity: 0.6;
+      animation: floatUp 6s ease-in infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(50px) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.15;
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .orb-1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, #9f7aea, #667eea);
+      top: 10%;
+      left: 10%;
+      animation: moveOrb 20s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, #ff6b9d, #ee7752);
+      bottom: 15%;
+      right: 10%;
+      animation: moveOrb 22s ease-in-out infinite reverse;
+    }
+
+    @keyframes moveOrb {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(40px, -40px); }
+    }
+
+    /* Main container */
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 40px 20px;
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      animation: slideUp 1s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Main title */
+    .main-title {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #ffed4e, #ff6b9d, #9f7aea, #5a67d8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(255, 107, 157, 0.3);
+      animation: titleGlow 3s ease-in-out infinite, float 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% {
+        filter: brightness(1);
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      }
+      50% {
+        filter: brightness(1.2);
+        text-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(147, 51, 234, 0.6);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Subtitle */
+    .subtitle {
+      font-size: 1.2rem;
+      color: #e0e0e0;
+      opacity: 0.9;
+      font-weight: 300;
+      letter-spacing: 1px;
+      animation: fadeIn 1.5s ease-out 0.3s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Message container */
+    .message-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(147, 51, 234, 0.3);
+      border-radius: 25px;
+      padding: 50px 40px;
+      margin: 30px 0;
+      animation: messageSlide 1s ease-out 0.6s both;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .message-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .message-container:hover::before {
+      left: 100%;
+    }
+
+    @keyframes messageSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .heart-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      display: block;
+      animation: heartBeat 1.2s ease-in-out infinite;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      50% { transform: scale(1); }
+    }
+
+    .message-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #f0f0f0;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      animation: messageReveal 2s ease-out 1s both;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes messageReveal {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .sender {
+      font-size: 0.95rem;
+      color: #ffed4e;
+      margin-top: 25px;
+      font-style: italic;
+      opacity: 0.9;
+      animation: senderFade 1.5s ease-out 2s both;
+    }
+
+    @keyframes senderFade {
+      from { opacity: 0; }
+      to { opacity: 0.9; }
+    }
+
+    /* Interactive button */
+    .surprise-btn {
+      padding: 18px 45px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #9f7aea, #667eea);
+      color: #fff;
+      box-shadow: 0 8px 25px rgba(147, 51, 234, 0.4);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+      animation: buttonAppear 1s ease-out 1.2s both;
+    }
+
+    @keyframes buttonAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .surprise-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .surprise-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(147, 51, 234, 0.6);
+    }
+
+    .surprise-btn:hover::before {
+      left: 100%;
+    }
+
+    .surprise-btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Message reveal animation */
+    .message-reveal {
+      font-size: 2rem;
+      color: #ffed4e;
+      text-shadow: 0 0 20px rgba(255, 237, 74, 0.8);
+      opacity: 0;
+      position: fixed;
+      pointer-events: none;
+      animation: messageFloat 2s ease-out forwards;
+    }
+
+    @keyframes messageFloat {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0.5);
+      }
+    }
+
+    /* Fireworks particles */
+    .particle {
+      position: fixed;
+      pointer-events: none;
+    }
+
+    /* Canvas for effects */
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 15px;
+        gap: 20px;
+      }
+
+      .main-title {
+        font-size: 2.2rem;
+      }
+
+      .message-container {
+        padding: 35px 25px;
+        border-radius: 20px;
+      }
+
+      .message-text {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .surprise-btn {
+        padding: 14px 35px;
+        font-size: 1rem;
+      }
+
+      .glow-orb {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 12px;
+        gap: 15px;
+      }
+
+      .main-title {
+        font-size: 1.8rem;
+      }
+
+      .message-container {
+        padding: 25px 18px;
+        margin: 20px 0;
+      }
+
+      .heart-icon {
+        font-size: 2rem;
+      }
+
+      .message-text {
+        font-size: 0.95rem;
+      }
+
+      .surprise-btn {
+        padding: 12px 28px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background elements -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <canvas id="effectCanvas"></canvas>
+
+  <!-- Main content -->
+  <div class="container">
+    <h1 class="main-title">Happy New Year 2026 💖</h1>
+    <p class="subtitle">A message made with love, just for you</p>
+
+    <div class="message-container">
+      <span class="heart-icon">💖</span>
+      <p class="message-text">
+        As the new year begins, may your days be filled with hope, your nights with peace, and your heart with happiness. 
+        <br><br>
+        Thank you for being part of my journey. Your presence has made this year truly special. 
+        <br><br>
+        May this year bring you success, love, and countless beautiful moments. May you chase your dreams with courage, 
+        face challenges with strength, and celebrate every small victory.
+        <br><br>
+        Here's to new adventures, unforgettable memories, and a year filled with blessings beyond your imagination.
+      </p>
+      <div class="sender">This message was sent with love 💝</div>
+    </div>
+
+    <button class="surprise-btn" id="surpriseBtn">✨ Tap for Magic & Fireworks 🎉</button>
+  </div>
+
+  <script>
+    // Create animated stars
+    function createStars() {
+      for (let i = 0; i < 60; i++) {
+        const star = document.createElement('div');
+        star.className = 'bg-stars';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        document.body.appendChild(star);
+      }
+    }
+
+    // Create floating hearts
+    function createFloatingHearts() {
+      const hearts = ['💖', '💝', '✨', '🌟', '💫'];
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * window.innerWidth + 'px';
+        heart.style.bottom = '-50px';
+        heart.style.animationDuration = (5 + Math.random() * 4) + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 10000);
+      }, 2000);
+    }
+
+    // Fireworks & Confetti Canvas System
+    const canvas = document.getElementById('effectCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createFirework(x, y) {
+      const colors = ['#ffed4e', '#ff6b9d', '#9f7aea', '#5a67d8', '#00d4ff', '#ff00ff', '#23d5ab'];
+      const count = 60;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5);
+        const speed = Math.random() * 6 + 3;
+        const size = Math.random() * 4 + 2;
+
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size,
+          gravity: 0.12
+        });
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.alpha -= 0.008;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          return;
+        }
+
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      if (particles.length > 0) {
+        requestAnimationFrame(animateParticles);
+      }
+    }
+
+    // Button interaction
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    surpriseBtn.addEventListener('click', () => {
+      // Create multiple firework bursts
+      createFirework(window.innerWidth / 2, window.innerHeight / 2);
+      createFirework(window.innerWidth / 3, window.innerHeight / 3);
+      createFirework((window.innerWidth * 2) / 3, window.innerHeight / 3);
+      createFirework(window.innerWidth / 4, (window.innerHeight * 3) / 4);
+      createFirework((window.innerWidth * 3) / 4, (window.innerHeight * 3) / 4);
+
+      animateParticles();
+
+      // Floating messages
+      const messages = ['Happy New Year!', 'Make it amazing!', 'You got this! 💪', 'Celebrate! 🎊', 'Shine bright! ⭐'];
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const msg = document.createElement('div');
+          msg.className = 'message-reveal';
+          msg.textContent = messages[Math.floor(Math.random() * messages.length)];
+          msg.style.left = Math.random() * window.innerWidth + 'px';
+          msg.style.top = window.innerHeight / 2 + 'px';
+          document.body.appendChild(msg);
+          setTimeout(() => msg.remove(), 2000);
+        }, i * 200);
+      }
+
+      // Button animation
+      surpriseBtn.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        surpriseBtn.style.transform = 'scale(1)';
+      }, 100);
+    });
+
+    // Click anywhere for fireworks
+    document.addEventListener('click', (e) => {
+      createFirework(e.clientX, e.clientY);
+      animateParticles();
+    });
+
+    // Initialize
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    createStars();
+    createFloatingHearts();
+  </script>
+</body>
+</html>
